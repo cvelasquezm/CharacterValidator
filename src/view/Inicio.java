@@ -7,8 +7,8 @@ package view;
 
 import Controllers.FileController;
 import java.io.File;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  */
 public class Inicio extends javax.swing.JFrame {       
     TableColumnModel columnModel;
-    TableModel model;
+    DefaultTableModel model;
     
     /**
      * Creates new form Inicio
@@ -24,7 +24,7 @@ public class Inicio extends javax.swing.JFrame {
     public Inicio() {
         initComponents();        
         FileChooser.setVisible(false);
-        model = this.FileTable.getModel();
+        model = (DefaultTableModel) this.FileTable.getModel();
         DetailPanel.setVisible(false);
         
         setLocationRelativeTo(null);
@@ -201,13 +201,25 @@ public class Inicio extends javax.swing.JFrame {
         DetailPanel.setVisible(true);
         FileController controller = new FileController();
         File[] listFiles = controller.readFile(routeFile.getText());
-
-        for (int i = 0; i < listFiles.length; i++) {
+        Integer countFiles = listFiles.length;
+        Integer countFilesIssue = 0;
+        model.setRowCount(countFilesIssue+1);        
+        
+        for (int i = 0; i < countFiles; i++) {
             File file = listFiles[i];
             String result = controller.processFile(file);
-            model.setValueAt(file.getName(), i, 0);
-            model.setValueAt(result, i, 1);
-        }   
+            if (!result.equals("")){
+                model.setValueAt(file.getName(), countFilesIssue, 0);
+                model.setValueAt(result, countFilesIssue, 1);
+                if (i < countFiles-1){
+                    model.addRow(new Object[]{"", ""});
+                }
+                countFilesIssue ++;
+            }
+            
+        }
+        
+        this.FileTable.setModel(model);
     }//GEN-LAST:event_ButtonProcessActionPerformed
 
     private void routeFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_routeFileActionPerformed

@@ -29,6 +29,14 @@ public class FileController {
         return null;
     }
     
+    private String removeSpecialCharacter(String cad, String[] characters){
+        for (int i = 0; i < characters.length; i++) {                
+            cad = cad.replace(characters[i], "");
+        }
+        
+        return cad;
+    }
+    
     public String processFile(File file){        
         String result = "";
         try {
@@ -37,11 +45,14 @@ public class FileController {
             BufferedReader br = new BufferedReader(reader);
             Integer line = 0;            
             while((temp = br.readLine()) != null){
-                Pattern pattern = Pattern.compile("([a-zA-Z0-9\\-]+\\s()[a-zA-Z0-9\\-]|[a-zA-Z0-9\\-;])+");                
+                if (line == 0){
+                    temp = removeSpecialCharacter(temp, new String[]{"?", "(", ")"});
+                }
+                Pattern pattern = Pattern.compile("([a-zA-Z0-9\\-\\:\\%\\.\\_]+\\s()[a-zA-Z0-9\\-\\:\\%\\.\\_]|[a-zA-Z0-9\\-\\:\\%\\.\\_;])+");                
                 Matcher matcher = pattern.matcher(temp);
                 line ++;
                 if (!matcher.matches()) {                    
-                    result += "'"+temp + "' - " + "Line: " + line +"\n";
+                    result += "["+temp + "] - " + "Line: " + line +"\n";
                 }
             }
             return result;
