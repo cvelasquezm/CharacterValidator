@@ -48,7 +48,8 @@ public class FileController {
                 if (line == 0){
                     temp = removeSpecialCharacter(temp, new String[]{"?", "(", ")"});
                 }
-                Pattern pattern = Pattern.compile("([a-zA-Z0-9\\-\\:\\%\\.\\_]+\\s()[a-zA-Z0-9\\-\\:\\%\\.\\_]|[a-zA-Z0-9\\-\\:\\%\\.\\_;])+");                
+                Pattern pattern = Pattern.compile("([a-zA-Z0-9\\-\\:\\%\\.\\_\\/]+\\s()[a-zA-Z0-9\\-\\:\\%\\.\\_\\/]|[a-zA-Z0-9\\-\\:\\%\\.\\_\\/;])+");
+				//EJEMPLO DE LA VALIDACIÓN-ACEPTA FRASES CON ESPACIOS: "ASDASD SADSA;ASDASDAS;SADASD ASDAS;A SDSA"
                 Matcher matcher = pattern.matcher(temp);
                 line ++;
                 if (!matcher.matches()) {                    
